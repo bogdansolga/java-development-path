@@ -1,6 +1,6 @@
-package com.java.training.mariana.sesiune3.car.enums;
+package com.java.training.d03.homework.mariana.car.enums;
 
-import com.java.training.mariana.sesiune3.car.types.*;
+import com.java.training.d03.homework.mariana.car.types.*;
 
 public enum CarType {
         FC("Family Car") {

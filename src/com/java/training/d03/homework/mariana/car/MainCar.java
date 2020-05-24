@@ -1,7 +1,7 @@
-package com.java.training.mariana.sesiune3.car;
+package com.java.training.d03.homework.mariana.car;
 
-import com.java.training.mariana.sesiune3.car.enums.CarType;
-import com.java.training.mariana.sesiune3.car.types.*;
+import com.java.training.d03.homework.mariana.car.enums.CarType;
+import com.java.training.d03.homework.mariana.car.types.*;
 
 import java.util.*;
 
@@ -12,11 +12,12 @@ public class MainCar {
         Engine carEngine2000 = new Engine(2.0);
         Engine carEngine1400 = new Engine(1.4);
 
-        FamilyCar familyCar1 = new FamilyCar("Mercedes", "E70", "red", 150, "gas", carEngine2000, 7000, true, false);
+        FamilyCar familyCar1 = new FamilyCar("Mercedes", "E70", "red", 150, "gas",
+                carEngine2000, 7000, true, false);
         System.out.println(familyCar1.toString());
 
-
-        FamilyCar familyCar2 = new FamilyCar("Mercedes", "E70", "black", 180, "diesel", carEngine2000, 15000, false, true);
+        FamilyCar familyCar2 = new FamilyCar("Mercedes", "E70", "black", 180, "diesel",
+                carEngine2000, 15000, false, true);
         System.out.println(familyCar2.toString());
 
         colorService(familyCar2);
@@ -40,9 +41,6 @@ public class MainCar {
         carHashMap(familyCar1, familyCar2, vanCar1);
 
         System.out.println("----------------------------------------------------------------------------------");
-
-
-
     }
 
     private static void carHashMap(FamilyCar familyCar1, FamilyCar familyCar2, Van vanCar1) {
@@ -67,10 +65,12 @@ public class MainCar {
     }
 
     private static Van createVanCars(Engine carEngine1400) {
-        Van vanCar1 = new Van("VW","golf","blue",5, 4,180,"diesel",carEngine1400,20000, false);
+        Van vanCar1 = new Van("VW","golf","blue",5, 4,180,
+                "diesel",carEngine1400,20000, false);
         System.out.println(vanCar1.toString());
 
-        Van vanCar2 = new Van("VW","golf","black",9, 4,150,"diesel",carEngine1400,20000, true);
+        Van vanCar2 = new Van("VW","golf","black",9, 4,150,
+                "diesel",carEngine1400,20000, true);
         System.out.println(vanCar2.toString());
         return vanCar1;
     }
@@ -95,6 +95,4 @@ public class MainCar {
             type.getCarType().displayFeatures();
         }
     }
-
-
 }

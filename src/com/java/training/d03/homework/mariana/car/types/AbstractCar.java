@@ -1,4 +1,4 @@
-package com.java.training.mariana.sesiune3.car.types;
+package com.java.training.d03.homework.mariana.car.types;
 
 public abstract class AbstractCar {
 

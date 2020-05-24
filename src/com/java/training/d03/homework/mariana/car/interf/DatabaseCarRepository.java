@@ -1,7 +1,7 @@
-package com.java.training.mariana.sesiune3.car.interf;
+package com.java.training.d03.homework.mariana.car.interf;
 
-import com.java.training.mariana.sesiune3.car.types.AbstractCar;
-import com.java.training.mariana.sesiune3.car.types.Engine;
+import com.java.training.d03.homework.mariana.car.types.AbstractCar;
+import com.java.training.d03.homework.mariana.car.types.Engine;
 
 public class DatabaseCarRepository implements CarRepository {
     @Override
