@@ -16,6 +16,8 @@ public class ExceptionsMain {
 
         nullPointerExceptionAvoided();
 
+        cleanerNullPointerExceptionAvoided();
+
         nullPointerExceptionWithTryCatch();
     }
 
@@ -36,6 +38,16 @@ public class ExceptionsMain {
         } else {
             System.err.println("The name is null");
         }
+    }
+
+    private static void cleanerNullPointerExceptionAvoided() {
+        String name = null;
+        if (name == null) {
+            System.err.println("The name is null");
+            return;
+        }
+
+        System.out.println(name.length());
     }
 
     // a try/catch block with an action made on catch

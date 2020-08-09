@@ -28,17 +28,20 @@ public class ExceptionTypes {
     }
 
     private static void handlingTheException() {
+        String fileName = "section.xml";
         FileInputStream fileInputStream = null;
         try {
-            fileInputStream = new FileInputStream(new File("section.xml"));
+            System.out.println("Opening the file '" + fileName + "'...");
+            fileInputStream = new FileInputStream(new File(fileName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new OurFileNotFoundException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
 
+        System.out.println("The file '" + fileName + "' was successfully opened");
         XMLDecoder xmlDecoder = new XMLDecoder(fileInputStream);
     }
 
