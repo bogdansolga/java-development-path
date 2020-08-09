@@ -11,11 +11,9 @@ public class CSVFileExampleUsingAServiceClass {
         // the 'service' name will be further detailed
         // for now - it contains the business logic from a program
 
-        CSVFileService csvFileService = new CSVFileService();
+        final CSVFileService csvFileService = new CSVFileService();
         final Set<String> fileContent = csvFileService.readProductsFromFile("products.csv");
         final Set<Product> products = csvFileService.convertLinesIntoProducts(fileContent);
-        for (Product product : products) {
-            System.out.println(product);
-        }
+        csvFileService.displayProducts(products);
     }
 }

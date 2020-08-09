@@ -59,4 +59,10 @@ public class CSVFileService {
         }
         return products;
     }
+
+    public void displayProducts(Set<Product> products) {
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
 }
