@@ -12,15 +12,15 @@ import java.util.List;
 
 public class Main {
 
-    private static final String FILE_NAME = "section.xml";
+    private static final String fileName = "Store";
     private static List<Store> stores;
     public static void main(String[] args) {
         init();
         MenuService.mainMenu();
     }
     private static void init(){
-        stores = UtilService.getAllData(FILE_NAME);
-        if(stores == null) stores = new ArrayList<>();
+        stores = UtilService.getAllData(fileName);
+        if (stores == null) stores = new ArrayList<>();
 
     }
 
@@ -42,6 +42,6 @@ public class Main {
     }
 
     public static String getFileName() {
-        return FILE_NAME;
+        return fileName;
     }
 }
