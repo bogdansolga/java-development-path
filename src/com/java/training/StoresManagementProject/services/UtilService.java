@@ -55,22 +55,17 @@ public class UtilService {
     public static void writeInXML(final String fileName, List<Store> storeList){
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
              XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStream)) {
-
-            xmlEncoder.writeObject(storeList);
+                xmlEncoder.writeObject(storeList);
         } catch (Exception ex) {
         }
     }
 
     public static void writeInCSV(final String fileName, List<Store> storeList) {
-        File file = new File(fileName);
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
+        try (FileWriter fw = new FileWriter(fileName);
+            BufferedWriter bw = new BufferedWriter(fw)){
             bw.write("Store, Section, Product");
             bw.newLine();
-            for (int i = 0; i < storeList.size() ; i++)
-            {
+            for (int i = 0; i < storeList.size() ; i++) {
                 if (storeList.get(i).getSections() != null) {
                     for (Section section : storeList.get(i).getSections()) {
                         if (section.getProducts() != null) {
@@ -93,8 +88,8 @@ public class UtilService {
             bw.close();
             fw.close();
             System.out.println("Data was written in the CSV file");
-        } catch (IOException e) {
-            System.err.println("CSV file was not created");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 
