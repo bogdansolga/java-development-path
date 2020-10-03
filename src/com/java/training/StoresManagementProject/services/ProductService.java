@@ -81,14 +81,14 @@ public class ProductService {
 
         chosenStore = StoreService.readStore();
         store = StoreService.searchStore(chosenStore, Main.getStores());
-        if (store==null) return;
+        if (store == null) return;
 
         chosenSection = SectionService.readSection(store);
         section = SectionService.searchSection(chosenSection, store.getSections());
         if (section == null) return;
 
         System.out.println("Choose an unique product name for this store and section: ");
-        productName=UtilService.getScanner().next();
+        productName = UtilService.getScanner().next();
         add(Main.getFileName(), chosenStore, chosenSection, new Product(0,productName), Main.getStores());
     }
 
@@ -140,19 +140,19 @@ public class ProductService {
     public static void display(Section section){
         try {
             section.getProducts().forEach(System.out::println);
-        }catch(NullPointerException nullPointerException){
-            System.out.println("There are no products for this section");
+        } catch (NullPointerException nullPointerException){
+            System.err.println("There are no products for this section");
         }
     }
 
     public static void displayProducts(){
         String chosenStore = StoreService.readStore();
-        Store store = StoreService.searchStore(chosenStore,Main.getStores());
-        if(store == null) return;
+        Store store = StoreService.searchStore(chosenStore, Main.getStores());
+        if (store == null) return;
 
         String chosenSection = SectionService.readSection(store);
-        Section section = SectionService.searchSection(chosenSection,store.getSections());
-        if(section == null) return;
+        Section section = SectionService.searchSection(chosenSection, store.getSections());
+        if (section == null) return;
 
         display(section);
     }

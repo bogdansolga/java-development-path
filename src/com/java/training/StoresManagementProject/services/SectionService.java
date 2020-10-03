@@ -100,7 +100,7 @@ public class SectionService {
     public static void display(Store store){
         try {
             store.getSections().forEach(System.out::println);
-        }catch (NullPointerException nullPointerException){
+        } catch (NullPointerException nullPointerException){
            nullPointerException.printStackTrace();
         }
     }

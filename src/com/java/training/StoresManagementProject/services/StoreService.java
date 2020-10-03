@@ -20,8 +20,8 @@ public class StoreService {
         UtilService.writeInCSV(fileName.concat(".csv"), storeList);
     }
 
-    public static void update(final String fileName,String storeName, Store store, List<Store> storeList){
-        Store searchedStore = searchStore(storeName,storeList);
+    public static void update(final String fileName, String storeName, Store store, List<Store> storeList){
+        Store searchedStore = searchStore(storeName, storeList);
         if (searchedStore == null) return;
         searchedStore.setId(store.getId());
         searchedStore.setName(store.getName());
@@ -49,14 +49,14 @@ public class StoreService {
     public static void createStore(){
         System.out.println("Please create a store");
         String storeName = UtilService.getScanner().next();
-        add(Main.getFileName(),new Store(0,storeName),Main.getStores());
+        add(Main.getFileName(), new Store(0,storeName), Main.getStores());
     }
 
     public static String readStore(){
         String chosenStore = "";
         System.out.println("Please enter a store:");
         for (Store store: Main.getStores()){
-            System.out.print(store.getName()+"\t");
+            System.out.print(store.getName() + "\t");
         }
         chosenStore = UtilService.getScanner().next();
         return chosenStore;
