@@ -26,8 +26,7 @@ public class UtilService {
             final String s;
             s = reader.readLine();
             return s;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
@@ -46,21 +45,22 @@ public class UtilService {
     }
 
     public static void createNewStore() {
-        System.out.println("Enter the name of the new store: ");
+        System.out.println ("Enter the name of the new store: ");
         final String name = readValue();
         Store store = new Store(1, name, null);
         System.out.println("The store " + store.getName() + " was successfully created.");
     }
 
-    public static void writeInXML(final String fileName, List<Store> storeList){
+    public static void writeInXML (final String fileName, List<Store> storeList){
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
              XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStream)) {
                 xmlEncoder.writeObject(storeList);
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
-    public static void writeInCSV(final String fileName, List<Store> storeList) {
+    public static void writeInCSV (final String fileName, List<Store> storeList) {
         try (FileWriter fw = new FileWriter(fileName);
             BufferedWriter bw = new BufferedWriter(fw)){
             bw.write("Store, Section, Product");
@@ -105,6 +105,7 @@ public class UtilService {
             } while (object != null);
 
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
         return null;
     }
