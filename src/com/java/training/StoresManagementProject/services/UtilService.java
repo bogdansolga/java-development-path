@@ -56,7 +56,7 @@ public class UtilService {
              XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStream)) {
                 xmlEncoder.writeObject(storeList);
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -105,7 +105,7 @@ public class UtilService {
             } while (object != null);
 
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return null;
     }
