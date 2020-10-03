@@ -13,54 +13,54 @@ import java.util.Set;
 
 public class ProductService {
     public static void add(final String fileName, String storeName, String sectionName, Product product, List<Store> storeList){
-        Store store = StoreService.searchStore(storeName,storeList);
+        Store store = StoreService.searchStore(storeName, storeList);
         if (store == null) return;
 
-        Section section = SectionService.searchSection(sectionName,store.getSections());
+        Section section = SectionService.searchSection(sectionName, store.getSections());
         if (section == null) return;
 
         if (section.getProducts() == null) section.setProducts(new HashSet<>());
 
-        if (searchProduct(product.getName(),section.getProducts()) != null){
+        if (searchProduct(product.getName(), section.getProducts()) != null){
             System.out.println("The product already exist!");
             return;
         }
         section.getProducts().add(product);
-        UtilService.writeInXML(fileName.concat(".xml"),storeList);
-        UtilService.writeInCSV(fileName.concat(".csv"),storeList);
+        UtilService.writeInXML(fileName.concat(".xml"), storeList);
+        UtilService.writeInCSV(fileName.concat(".csv"), storeList);
     }
 
     public static void update(final String fileName, String storeName, String sectionName, String productName, Product product, List<Store> storeList){
-        Store searchedStore = StoreService.searchStore(storeName,storeList);
+        Store searchedStore = StoreService.searchStore(storeName, storeList);
         if (searchedStore == null) return;
 
-        Section searchedSection = SectionService.searchSection(sectionName,searchedStore.getSections());
+        Section searchedSection = SectionService.searchSection(sectionName, searchedStore.getSections());
         if (searchedSection == null) return;
 
-        Product searchedProduct = searchProduct(productName,searchedSection.getProducts());
+        Product searchedProduct = searchProduct(productName, searchedSection.getProducts());
         if (searchedProduct == null) return;
 
         searchedProduct.setId(product.getId());
         searchedProduct.setDescription(product.getDescription());
         searchedProduct.setName(product.getName());
         searchedProduct.setPrice(product.getPrice());
-        UtilService.writeInXML(fileName.concat(".xml"),storeList);
-        UtilService.writeInCSV(fileName.concat(".csv"),storeList);
+        UtilService.writeInXML(fileName.concat(".xml"), storeList);
+        UtilService.writeInCSV(fileName.concat(".csv"), storeList);
     }
 
     public static void delete(final String fileName, String storeName, String sectionName, String productName, List<Store> storeList){
-        Store searchedStore = StoreService.searchStore(storeName,storeList);
+        Store searchedStore = StoreService.searchStore(storeName, storeList);
         if (searchedStore == null) return;
 
-        Section searchedSection = SectionService.searchSection(sectionName,searchedStore.getSections());
+        Section searchedSection = SectionService.searchSection(sectionName, searchedStore.getSections());
         if (searchedSection == null) return;
 
-        Product searchedProduct = searchProduct(productName,searchedSection.getProducts());
+        Product searchedProduct = searchProduct(productName, searchedSection.getProducts());
         if (searchedProduct == null) return;
 
         searchedSection.getProducts().remove(searchedProduct);
-        UtilService.writeInXML(fileName.concat(".xml"),storeList);
-        UtilService.writeInCSV(fileName.concat(".csv"),storeList);
+        UtilService.writeInXML(fileName.concat(".xml"), storeList);
+        UtilService.writeInCSV(fileName.concat(".csv"), storeList);
     }
 
     public static Product searchProduct(String productName, Set<Product> productSet) {
@@ -80,23 +80,23 @@ public class ProductService {
         String productName="";
 
         chosenStore = StoreService.readStore();
-        store = StoreService.searchStore(chosenStore,Main.getStores());
+        store = StoreService.searchStore(chosenStore, Main.getStores());
         if (store==null) return;
 
         chosenSection = SectionService.readSection(store);
-        section = SectionService.searchSection(chosenSection,store.getSections());
+        section = SectionService.searchSection(chosenSection, store.getSections());
         if (section == null) return;
 
         System.out.println("Choose an unique product name for this store and section: ");
         productName=UtilService.getScanner().next();
-        add(Main.getFileName(),chosenStore,chosenSection,new Product(0,productName),Main.getStores());
+        add(Main.getFileName(), chosenStore, chosenSection, new Product(0,productName), Main.getStores());
     }
 
     public static String readProduct(Section section){
         String chosenProduct = "";
         System.out.println("Please enter a product: ");
         for (Product product : section.getProducts()){
-            System.out.println(product.getName()+"\t");
+            System.out.println(product.getName() + "\t");
         }
         chosenProduct = UtilService.getScanner().next();
         return chosenProduct;
@@ -109,39 +109,39 @@ public class ProductService {
         String chosenSection = "";
         String chosenProduct = "";
         String chosenStore = StoreService.readStore();
-        Store store = StoreService.searchStore(chosenStore,Main.getStores());
+        Store store = StoreService.searchStore(chosenStore, Main.getStores());
         if (store == null) return;
 
         chosenSection = SectionService.readSection(store);
-        Section section = SectionService.searchSection(chosenSection,store.getSections());
+        Section section = SectionService.searchSection(chosenSection, store.getSections());
         if (section == null) return;
 
         chosenProduct = readProduct(section);
         System.out.println("Choose a new name:");
         newData =  UtilService.getScanner().next();
-        update(Main.getFileName(),chosenStore,chosenSection,chosenProduct,new Product(0,newData),Main.getStores());
+        update(Main.getFileName(), chosenStore, chosenSection, chosenProduct, new Product(0,newData), Main.getStores());
     }
 
     public static void deleteProduct(){
         String chosenProduct = "";
         String chosenSection = "";
         String chosenStore = StoreService.readStore();
-        Store store = StoreService.searchStore(chosenStore,Main.getStores());
-        if(store == null) return;
+        Store store = StoreService.searchStore(chosenStore, Main.getStores());
+        if (store == null) return;
 
         chosenSection = SectionService.readSection(store);
-        Section section = SectionService.searchSection(chosenSection,store.getSections());
-        if(section == null) return;
+        Section section = SectionService.searchSection(chosenSection, store.getSections());
+        if (section == null) return;
 
         chosenProduct = readProduct(section);
-        delete(Main.getFileName(),chosenStore,chosenSection,chosenProduct,Main.getStores());
+        delete(Main.getFileName(), chosenStore, chosenSection, chosenProduct, Main.getStores());
     }
 
     public static void display(Section section){
         try {
             section.getProducts().forEach(System.out::println);
         }catch(NullPointerException nullPointerException){
-            System.out.println("Don't exists products for this section");
+            System.out.println("There are no products for this section");
         }
     }
 

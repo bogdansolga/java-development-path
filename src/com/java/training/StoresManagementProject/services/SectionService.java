@@ -101,7 +101,7 @@ public class SectionService {
         try {
             store.getSections().forEach(System.out::println);
         }catch (NullPointerException nullPointerException){
-            System.out.println("There are no products for this section");
+           nullPointerException.printStackTrace();
         }
     }
 
