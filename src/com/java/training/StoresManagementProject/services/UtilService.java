@@ -60,6 +60,7 @@ public class UtilService {
         } catch (Exception ex) {
         }
     }
+
     public static void writeInCSV(final String fileName, List<Store> storeList) {
         File file = new File(fileName);
         FileWriter fw = null;
@@ -131,9 +132,9 @@ public class UtilService {
             System.out.println("Zip file was successfully created");
 
         } catch (FileNotFoundException ex) {
-            System.err.format("The file %s does not exist", "Store.csv");
-        } catch (IOException ex) {
-            System.err.println("I/O error: " + ex);
+            ex.printStackTrace();
+        }  catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 
@@ -151,9 +152,9 @@ public class UtilService {
             System.out.println("Zip file was successfully created");
 
         } catch (FileNotFoundException ex) {
-            System.err.format("The file %s does not exist", "Store.xml");
-        } catch (IOException ex) {
-            System.err.println("I/O error: " + ex);
+            ex.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 }
