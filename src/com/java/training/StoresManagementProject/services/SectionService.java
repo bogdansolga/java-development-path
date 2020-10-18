@@ -1,6 +1,5 @@
 package com.java.training.StoresManagementProject.services;
 
-
 import com.java.training.StoresManagementProject.Main;
 import com.java.training.StoresManagementProject.models.Section;
 import com.java.training.StoresManagementProject.models.Store;
@@ -47,17 +46,19 @@ public class SectionService {
         UtilService.writeInCSV(fileName.concat(".csv"), storeList);
     }
 
-
     public static Section searchSection(String sectionName, Set<Section> sectionList) {
         try {
-            return sectionList.stream().filter(section -> section.getName().compareTo(sectionName) == 0).findFirst().get();
+            return sectionList.stream()
+                              .filter(section -> section.getName().compareTo(sectionName) == 0).findFirst()
+                              .get(); //FIXME do not invoke .get without .isPresent
         } catch (NoSuchElementException exception) {
             System.out.println("Could not find the section with the specified name;");
         }
         return null;
     }
 
-    public static void createSection(){
+    public static void createSection() {
+        //TODO initialize the variables near the place where they are used
         String chosenStore = "";
         String sectionName="";
         chosenStore = StoreService.readStore();
@@ -73,11 +74,14 @@ public class SectionService {
         for (Section loopSection : store.getSections()){
             System.out.println(loopSection.getName() + "\t");
         }
+
+        //TODO do not write in a variable which is returned on the next line
         chosenSection = UtilService.getScanner().next();
         return chosenSection;
     }
 
-    public static void editSection(){
+    public static void editSection() {
+        //TODO initialize the variables near the place where they are used
         String newData = "";
         String chosenStore = StoreService.readStore();
         Store store = StoreService.searchStore(chosenStore, Main.getStores());
@@ -88,7 +92,8 @@ public class SectionService {
         update(Main.getFileName(), new Section(0,newData), chosenStore, chosenSection, Main.getStores());
     }
 
-    public static void deleteSection(){
+    public static void deleteSection(){ //TODO add spaces :)
+        //TODO initialize the variables near the place where they are used
         String chosenSection = "";
         String chosenStore = StoreService.readStore();
         Store store = StoreService.searchStore(chosenStore, Main.getStores());
@@ -98,6 +103,7 @@ public class SectionService {
     }
 
     public static void display(Store store){
+        //FIXME check if there are objects, do not catch & handle exceptions
         try {
             store.getSections().forEach(System.out::println);
         } catch (NullPointerException nullPointerException){

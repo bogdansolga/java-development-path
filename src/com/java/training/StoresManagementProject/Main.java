@@ -1,7 +1,5 @@
 package com.java.training.StoresManagementProject;
 
-
-
 import com.java.training.StoresManagementProject.models.Store;
 import com.java.training.StoresManagementProject.services.MenuService;
 import com.java.training.StoresManagementProject.services.UtilService;
@@ -9,22 +7,23 @@ import com.java.training.StoresManagementProject.services.UtilService;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Main {
 
     private static final String fileName = "Store";
     private static List<Store> stores;
+
     public static void main(String[] args) {
         init();
         MenuService.mainMenu();
     }
+
     private static void init(){
         stores = UtilService.getAllData(fileName);
         if (stores == null) stores = new ArrayList<>();
-
     }
 
-/*    private static void addStuff(){
+    /*
+        private static void addStuff(){
         StoreService.add(FILE_NAME,new Store(1,"Store1"),stores);
         StoreService.add(FILE_NAME,new Store(2,"Store2"),stores);
         SectionService.add(FILE_NAME,new Section(1,"Section1"),"Store1",stores);

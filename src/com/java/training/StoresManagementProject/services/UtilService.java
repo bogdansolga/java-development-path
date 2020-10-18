@@ -1,6 +1,5 @@
 package com.java.training.StoresManagementProject.services;
 
-
 import com.java.training.StoresManagementProject.exceptions.InvalidNumericInputException;
 import com.java.training.StoresManagementProject.models.Product;
 import com.java.training.StoresManagementProject.models.Section;
@@ -18,30 +17,32 @@ import java.util.zip.ZipOutputStream;
 
 public class UtilService {
     private static Scanner scanner = new Scanner(System.in);
+
     public static String readValue() {
+        // TODO use try with resources --> extract the stream objects
+
         //Enter data using BufferReader
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         // Reading data using readLine
         try {
-            final String s;
-            s = reader.readLine();
-            return s;
+            return reader.readLine();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    public static boolean isNumeric(final String value) throws InvalidNumericInputException {
+    public static boolean isNumeric(final String value) {
         if (value == null) {
             return false;
         }
+
         try {
-            final int numeric = Integer.parseInt(value);
+            Integer.parseInt(value);
+            return true;
         } catch (NumberFormatException e) {
-            throw new InvalidNumericInputException();
+            return false;
         }
-        return true;
     }
 
     public static void createNewStore() {
@@ -51,10 +52,11 @@ public class UtilService {
         System.out.println("The store " + store.getName() + " was successfully created.");
     }
 
-    public static void writeInXML (final String fileName, List<Store> storeList){
+    public static void writeInXML(final String fileName, List<Store> storeList) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
              XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStream)) {
-                xmlEncoder.writeObject(storeList);
+
+            xmlEncoder.writeObject(storeList);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -62,7 +64,8 @@ public class UtilService {
 
     public static void writeInCSV (final String fileName, List<Store> storeList) {
         try (FileWriter fw = new FileWriter(fileName);
-            BufferedWriter bw = new BufferedWriter(fw)){
+            BufferedWriter bw = new BufferedWriter(fw)) {
+
             bw.write("Store, Section, Product");
             bw.newLine();
             for (int i = 0; i < storeList.size() ; i++) {
@@ -103,7 +106,6 @@ public class UtilService {
                     return (List<Store>)object;
                 }
             } while (object != null);
-
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -115,6 +117,7 @@ public class UtilService {
     }
 
     public static void archiveCsvAsZip() {
+        // TODO use try with resources --> extract the stream objects
         try {
             String sourceFile = "Store.csv";
             File file = new File(sourceFile);
@@ -126,15 +129,13 @@ public class UtilService {
             zipoutput.closeEntry();
             zipoutput.close();
             System.out.println("Zip file was successfully created");
-
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
         }  catch (IOException ioException) {
             ioException.printStackTrace();
         }
     }
 
     public static void archiveXmlAsZip() {
+        // TODO use try with resources --> extract the stream objects
         try {
             String sourceFile = "Store.xml";
             File file = new File(sourceFile);
@@ -146,11 +147,8 @@ public class UtilService {
             zipoutput.closeEntry();
             zipoutput.close();
             System.out.println("Zip file was successfully created");
-
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
         }
     }
 }
