@@ -46,22 +46,22 @@ public class MenuService {
                     secondaryMenu(option);
                 } else if (selectedValue == 3) {
                     //Option "Edit" is selected
-                     switch (option) {
-                         case "Stores": StoreService.editStore(); break;
-                         case "Sections": SectionService.editSection(); break;
-                         case "Products": ProductService.editProduct(); break;
-                       }
+                    switch (option) {
+                        case "Stores": StoreService.editStore(); break;
+                        case "Sections": SectionService.editSection(); break;
+                        case "Products": ProductService.editProduct(); break;
+                    }
                     pause();
                     secondaryMenu(option);
                 } else if (selectedValue == 4) {
                     //Option "Delete" is selected
                     switch (option) {
-                         case "Stores": StoreService.deleteStore(); break;
-                         case "Sections": SectionService.deleteSection(); break;
-                         case "Products": ProductService.deleteProduct(); break;
-                     }
-                     pause();
-                     secondaryMenu(option);
+                        case "Stores": StoreService.deleteStore(); break;
+                        case "Sections": SectionService.deleteSection(); break;
+                        case "Products": ProductService.deleteProduct(); break;
+                    }
+                    pause();
+                    secondaryMenu(option);
                 } else if (selectedValue == 5) {
                     //Option "Back to Main Menu" is selected
                     mainMenu();
@@ -111,13 +111,11 @@ public class MenuService {
                     pause();
                     mainMenu();
                 } else if (selectedValue == 5) {
-                    //Option "Export CSV" is selected
-                    //exportCSV();
+                    UtilService.archiveCsvAsZip();
                     pause();
                     mainMenu();
                 } else if (selectedValue == 6) {
-                    //Option "Archive CSV as Zip" is selected
-                    //archiveAsZip();
+                    UtilService.archiveXmlAsZip();
                     pause();
                     mainMenu();
                 } else if (selectedValue == 7) {
@@ -144,8 +142,8 @@ public class MenuService {
         System.out.println("2 - Sections");
         System.out.println("3 - Products");
         System.out.println("4 - Display all data");
-        System.out.println("5 - Export CSV");
-        System.out.println("6 - Archive CSV as Zip");
+        System.out.println("5 - Archive CSV as Zip");
+        System.out.println("6 - Archive XML as Zip");
         System.out.println("7 - Exit");
         mainMenuSelection();
     }
