@@ -28,18 +28,6 @@ public class UtilService {
         }
     }
 
-    public static boolean isNumeric(final String value) throws InvalidNumericInputException {
-        if (value == null) {
-            return false;
-        }
-        try {
-            final int numeric = Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            throw new InvalidNumericInputException();
-        }
-        return true;
-    }
-
     public static void createNewStore() {
         System.out.println("Enter the name of the new store: ");
         final String name = readValue();
