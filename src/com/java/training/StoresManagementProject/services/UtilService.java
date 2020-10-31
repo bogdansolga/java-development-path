@@ -1,6 +1,4 @@
 package com.java.training.StoresManagementProject.services;
-
-
 import com.java.training.StoresManagementProject.exceptions.InvalidNumericInputException;
 import com.java.training.StoresManagementProject.models.Product;
 import com.java.training.StoresManagementProject.models.Section;
@@ -66,22 +64,7 @@ public class UtilService {
             bw.write("Store, Section, Product");
             bw.newLine();
             for (int i = 0; i < storeList.size() ; i++) {
-                if (storeList.get(i).getSections() != null) {
-                    for (Section section : storeList.get(i).getSections()) {
-                        if (section.getProducts() != null) {
-                            for (Product product : section.getProducts()) {
-                                bw.write(storeList.get(i).getName().concat(", ").concat(section.getName()).concat(", ").concat(product.getName()));
-                                bw.newLine();
-                            }
-                        } else {
-                            bw.write(storeList.get(i).getName().concat(", ").concat(section.getName()));
-                            bw.newLine();
-                        }
-                    }
-                } else {
-                    bw.write(storeList.get(i).getName());
-                    bw.newLine();
-                }
+                getSectionsAndProducts(storeList, bw, i);
             }
             bw.write("\n");
             bw.newLine();
@@ -90,6 +73,29 @@ public class UtilService {
             System.out.println("Data was written in the CSV file");
         } catch (IOException ioException) {
             ioException.printStackTrace();
+        }
+    }
+
+    private static void getSectionsAndProducts(List<Store> storeList, BufferedWriter bw, int i) throws IOException {
+        if (storeList.get(i).getSections() != null) {
+            for (Section section : storeList.get(i).getSections()) {
+                getProducts(storeList, bw, i, section);
+            }
+        } else {
+            bw.write(storeList.get(i).getName());
+            bw.newLine();
+        }
+    }
+
+    private static void getProducts(List<Store> storeList, BufferedWriter bw, int i, Section section) throws IOException {
+        if (section.getProducts() != null) {
+            for (Product product : section.getProducts()) {
+                bw.write(storeList.get(i).getName().concat(", ").concat(section.getName()).concat(", ").concat(product.getName()));
+                bw.newLine();
+            }
+        } else {
+            bw.write(storeList.get(i).getName().concat(", ").concat(section.getName()));
+            bw.newLine();
         }
     }
 
@@ -126,7 +132,6 @@ public class UtilService {
             zipoutput.closeEntry();
             zipoutput.close();
             System.out.println("Zip file was successfully created");
-
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }  catch (IOException ioException) {
@@ -146,7 +151,6 @@ public class UtilService {
             zipoutput.closeEntry();
             zipoutput.close();
             System.out.println("Zip file was successfully created");
-
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ioException) {
