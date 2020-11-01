@@ -1,4 +1,4 @@
-package com.java.training.StoresManagementProject.models;
+package com.java.training.stores.project.models;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -25,11 +25,7 @@ public class Section implements Serializable {
 
     @Override
     public String toString() {
-        return "Section{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", products=" + products +
-                '}';
+        return "\n\t" + "[Section]: " + name + "\n" + products + "\n";
     }
 
     public int getId() {

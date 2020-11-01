@@ -1,4 +1,4 @@
-package com.java.training.StoresManagementProject.models;
+package com.java.training.stores.project.models;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -25,11 +25,7 @@ public class Store implements Serializable {
 
     @Override
     public String toString() {
-        return "Store{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", sections=" + sections +
-                '}';
+        return "\n" + "[Store]: " + name + "\n" + sections + "\n";
     }
 
     public String getName() {
