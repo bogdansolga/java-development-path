@@ -1,73 +1,97 @@
-package com.java.training.StoresManagementProject.services;
+package com.java.training.stores.project.services;
 
-import com.java.training.StoresManagementProject.Main;
-import com.java.training.StoresManagementProject.exceptions.InvalidNumericInputException;
+import com.java.training.stores.project.Main;
+import com.java.training.stores.project.exceptions.InvalidNumericInputException;
 
 public class MenuService {
 
-    public static void clearTrick(){
-        for(int i=1;i<=20;i++)
+    public static void clearTrick() {
+        for (int i = 1; i <= 20; i++)
             System.out.println("");
     }
 
-    public static void pause(){
+    public static void pause() {
         System.out.println("");
         System.out.println("Press any key to go back to the menu..");
         UtilService.readValue();
     }
 
-    public static void exit(){
+    public static void exit() {
         System.out.println("");
         System.out.println("Thank you for using our app!");
     }
 
-    public static void secondaryMenuSelection(String option){
-        try{
+    public static void secondaryMenuSelection(String option) {
+        try {
             final String selected = UtilService.readValue();
-            if( UtilService.isNumeric(selected)) {
+            if (UtilService.isNumeric(selected)) {
                 final int selectedValue = Integer.parseInt(selected);
                 if (selectedValue == 1) {
                     //Option "Display" is selected
                     switch (option) {
-                        case "Stores": StoreService.displayStores(); break;
-                        case "Sections": SectionService.displaySections(); break;
-                        case "Products": ProductService.displayProducts(); break;
+                        case "Stores":
+                            StoreService.displayStores();
+                            break;
+                        case "Sections":
+                            SectionService.displaySections();
+                            break;
+                        case "Products":
+                            ProductService.displayProducts();
+                            break;
                     }
                     pause();
                     secondaryMenu(option);
                 } else if (selectedValue == 2) {
                     //Option "Create" is selected
                     switch (option) {
-                        case "Stores": StoreService.createStore(); break;
-                        case "Sections": SectionService.createSection(); break;
-                        case "Products": ProductService.createProduct(); break;
+                        case "Stores":
+                            StoreService.createStore();
+                            break;
+                        case "Sections":
+                            SectionService.createSection();
+                            break;
+                        case "Products":
+                            ProductService.createProduct();
+                            break;
                     }
                     pause();
                     secondaryMenu(option);
                 } else if (selectedValue == 3) {
                     //Option "Edit" is selected
                     switch (option) {
-                        case "Stores": StoreService.editStore(); break;
-                        case "Sections": SectionService.editSection(); break;
-                        case "Products": ProductService.editProduct(); break;
+                        case "Stores":
+                            StoreService.editStore();
+                            break;
+                        case "Sections":
+                            SectionService.editSection();
+                            break;
+                        case "Products":
+                            ProductService.editProduct();
+                            break;
                     }
                     pause();
                     secondaryMenu(option);
                 } else if (selectedValue == 4) {
                     //Option "Delete" is selected
                     switch (option) {
-                        case "Stores": StoreService.deleteStore(); break;
-                        case "Sections": SectionService.deleteSection(); break;
-                        case "Products": ProductService.deleteProduct(); break;
+                        case "Stores":
+                            StoreService.deleteStore();
+                            break;
+                        case "Sections":
+                            SectionService.deleteSection();
+                            break;
+                        case "Products":
+                            ProductService.deleteProduct();
+                            break;
                     }
                     pause();
                     secondaryMenu(option);
                 } else if (selectedValue == 5) {
                     //Option "Back to Main Menu" is selected
                     mainMenu();
-                }else throw new InvalidNumericInputException();
+                } else throw new InvalidNumericInputException();
             }
-        }catch(InvalidNumericInputException e) {
+        } catch (InvalidNumericInputException e) {
             System.out.println(e.getMessage());
             try {
                 Thread.sleep(2000);
@@ -78,9 +102,9 @@ public class MenuService {
         }
     }
 
-    public static void secondaryMenu(String option){
+    public static void secondaryMenu(String option) {
         clearTrick();
-        System.out.println(option+" Menu:");
+        System.out.println(option + " Menu:");
         System.out.println("1 - Display");
         System.out.println("2 - Create");
         System.out.println("3 - Edit");
@@ -89,10 +113,10 @@ public class MenuService {
         secondaryMenuSelection(option);
     }
 
-    public static void mainMenuSelection(){
-        try{
+    public static void mainMenuSelection() {
+        try {
             final String selected = UtilService.readValue();
-            if( UtilService.isNumeric(selected)) {
+            if (UtilService.isNumeric(selected)) {
                 final int selectedValue = Integer.parseInt(selected);
                 if (selectedValue == 1) {
                     //Option "Stores" is selected
@@ -106,8 +130,7 @@ public class MenuService {
                     secondaryMenu("Products");
                 } else if (selectedValue == 4) {
                     //Option "Display" is selected
-                    //displayAll();
-                    System.out.println(Main.getStores());
+                    UtilService.displayStock(Main.getStores());
                     pause();
                     mainMenu();
                 } else if (selectedValue == 5) {
@@ -121,9 +144,9 @@ public class MenuService {
                 } else if (selectedValue == 7) {
                     //Option "Exit" is selected
                     exit();
-                }else throw new InvalidNumericInputException();
+                } else throw new InvalidNumericInputException();
             }
-        }catch(InvalidNumericInputException e) {
+        } catch (InvalidNumericInputException e) {
             System.out.println(e.getMessage());
             try {
                 Thread.sleep(2000);
@@ -134,7 +157,7 @@ public class MenuService {
         }
     }
 
-    public static void mainMenu(){
+    public static void mainMenu() {
         clearTrick();
         System.out.println("Welcome to Stores Management App");
         System.out.println("Choose an option:");

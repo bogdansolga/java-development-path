@@ -1,9 +1,8 @@
-package com.java.training.StoresManagementProject.services;
+package com.java.training.stores.project.services;
 
-import com.java.training.StoresManagementProject.exceptions.InvalidNumericInputException;
-import com.java.training.StoresManagementProject.models.Product;
-import com.java.training.StoresManagementProject.models.Section;
-import com.java.training.StoresManagementProject.models.Store;
+import com.java.training.stores.project.models.Product;
+import com.java.training.stores.project.models.Section;
+import com.java.training.stores.project.models.Store;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -12,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -33,9 +33,8 @@ public class UtilService {
     }
 
     public static boolean isNumeric(final String value) {
-        if (value == null) {
+        if (value == null)
             return false;
-        }
 
         try {
             Integer.parseInt(value);
@@ -46,7 +45,7 @@ public class UtilService {
     }
 
     public static void createNewStore() {
-        System.out.println ("Enter the name of the new store: ");
+        System.out.println("Enter the name of the new store: ");
         final String name = readValue();
         Store store = new Store(1, name, null);
         System.out.println("The store " + store.getName() + " was successfully created.");
@@ -62,13 +61,13 @@ public class UtilService {
         }
     }
 
-    public static void writeInCSV (final String fileName, List<Store> storeList) {
+    public static void writeInCSV(final String fileName, List<Store> storeList) {
         try (FileWriter fw = new FileWriter(fileName);
-            BufferedWriter bw = new BufferedWriter(fw)) {
+             BufferedWriter bw = new BufferedWriter(fw)) {
 
             bw.write("Store, Section, Product");
             bw.newLine();
-            for (int i = 0; i < storeList.size() ; i++) {
+            for (int i = 0; i < storeList.size(); i++) {
                 if (storeList.get(i).getSections() != null) {
                     for (Section section : storeList.get(i).getSections()) {
                         if (section.getProducts() != null) {
@@ -96,14 +95,14 @@ public class UtilService {
         }
     }
 
-    public static List<Store> getAllData(final String fileName){
+    public static List<Store> getAllData(final String fileName) {
         try (FileInputStream fileInputStream = new FileInputStream(new File(fileName));
              XMLDecoder xmlDecoder = new XMLDecoder(fileInputStream)) {
             Object object;
             do {
                 object = xmlDecoder.readObject();
-                if (object instanceof List && !((List) object).isEmpty() && ((List)object).get(0) instanceof Store) {
-                    return (List<Store>)object;
+                if (object instanceof List && !((List) object).isEmpty() && ((List) object).get(0) instanceof Store) {
+                    return (List<Store>) object;
                 }
             } while (object != null);
         } catch (Exception ex) {
@@ -129,7 +128,7 @@ public class UtilService {
             zipoutput.closeEntry();
             zipoutput.close();
             System.out.println("Zip file was successfully created");
-        }  catch (IOException ioException) {
+        } catch (IOException ioException) {
             ioException.printStackTrace();
         }
     }
@@ -151,4 +150,32 @@ public class UtilService {
             ex.printStackTrace();
         }
     }
+
+    public static void displayStock(List<Store> stores) {
+        printStores(stores);
+    }
+
+    public static void printStores(List<Store> stores) {
+        if (stores != null)
+            stores.forEach(store -> {
+                System.out.println("[Store]: " + store.getName());
+                printSections(store.getSections());
+            });
+    }
+
+    public static void printSections(Set<Section> sections) {
+        if (sections != null)
+            sections.forEach(section -> {
+                System.out.println("\t[Section]: " + section.getName());
+                printProducts(section.getProducts());
+            });
+    }
+
+    public static void printProducts(Set<Product> products) {
+        if (products != null)
+            products.forEach(product -> {
+                System.out.println("\t\t[Product]:" + product.getName());
+            });
+    }
+
 }
