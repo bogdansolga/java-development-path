@@ -20,6 +20,7 @@ import java.util.List;
  * @K is the type of the unique id
  */
 
+//TODO who uses me? :)
 public class GenericService<T, K> {
     protected void add(final String FILE, T object, K... level) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(FILE));
