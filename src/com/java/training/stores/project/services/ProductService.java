@@ -1,7 +1,5 @@
 package com.java.training.stores.project.services;
 
-
-import com.java.training.stores.project.Main;
 import com.java.training.stores.project.models.Product;
 import com.java.training.stores.project.models.Section;
 import com.java.training.stores.project.models.Store;
@@ -11,10 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-//import javax.rmi.CORBA.Util;
-
 public class ProductService {
-    public static void add(final String FILE_NAME, String storeName, String sectionName, Product product, List<Store> storeList) {
+    public static void add(String storeName, String sectionName, Product product, List<Store> storeList) {
         Optional<Store> store = StoreService.searchStore(storeName, storeList);
 
         Optional<Section> section = SectionService.searchSection(sectionName, store.get().getSections());
@@ -26,14 +22,13 @@ public class ProductService {
 
         section.get().getProducts().add(product);
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        StoreService.saveStores(storeList);
 
         System.out.println("[Product] " + product.getName() + " was added successfully");
-
     }
 
-    public static void update(final String FILE_NAME, String storeName, String sectionName, String productName, Product product, List<Store> storeList) {
+    public static void update(String storeName, String sectionName, String productName,
+                              Product product, List<Store> storeList) {
         Optional<Store> searchedStore = StoreService.searchStore(storeName, storeList);
 
         Optional<Section> searchedSection = SectionService.searchSection(sectionName, searchedStore.get().getSections());
@@ -45,13 +40,12 @@ public class ProductService {
         searchedProduct.get().setName(product.getName());
         searchedProduct.get().setPrice(product.getPrice());
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        StoreService.saveStores(storeList);
 
         System.out.println("[Product] " + productName + " is now called " + product.getName());
     }
 
-    public static void delete(final String FILE_NAME, String storeName, String sectionName, String productName, List<Store> storeList) {
+    public static void delete(String storeName, String sectionName, String productName, List<Store> storeList) {
         Optional<Store> searchedStore = StoreService.searchStore(storeName, storeList);
         if (!searchedStore.isPresent()) {
             System.out.println("Store is not existent!");
@@ -72,8 +66,7 @@ public class ProductService {
 
         searchedSection.get().getProducts().remove(searchedProduct.get());
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        StoreService.saveStores(storeList);
 
         System.out.println("[Product] " + productName + " was deleted");
     }
@@ -90,7 +83,7 @@ public class ProductService {
 
         if (chosenStore.equals("")) return;
 
-        store = StoreService.searchStore(chosenStore, Main.getStores());
+        store = StoreService.searchStore(chosenStore, StoreService.getStores());
         if (!store.isPresent()) {
             System.out.println("Store not existent");
             return;
@@ -116,7 +109,7 @@ public class ProductService {
             return;
         }
 
-        add(Main.getFileName(), chosenStore, chosenSection, new Product(0, productName), Main.getStores());
+        add(chosenStore, chosenSection, new Product(0, productName), StoreService.getStores());
     }
 
     public static String readProduct(Section section) {
@@ -126,7 +119,6 @@ public class ProductService {
             return "";
         }
 
-        String chosenProduct = "";
         System.out.println("Type product name: ");
         for (Product product : section.getProducts()) {
             System.out.println(product.getName() + "\t");
@@ -141,7 +133,7 @@ public class ProductService {
 
         if (chosenStore.equals("")) return;
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, Main.getStores());
+        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
         if (!store.isPresent()) {
             System.out.println("Store not existent!");
             return;
@@ -168,7 +160,7 @@ public class ProductService {
         System.out.println("Choose a new name:");
         String newData = UtilService.getScanner().next();
 
-        update(Main.getFileName(), chosenStore, chosenSection, chosenProduct, new Product(0, newData), Main.getStores());
+        update(chosenStore, chosenSection, chosenProduct, new Product(0, newData), StoreService.getStores());
     }
 
     public static void deleteProduct() {
@@ -176,7 +168,7 @@ public class ProductService {
 
         if (chosenStore.equals("")) return;
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, Main.getStores());
+        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
         if (!store.isPresent()) {
             System.out.println("Store not existent!");
             return;
@@ -200,7 +192,7 @@ public class ProductService {
             System.out.println("Product not existent!");
         }
 
-        delete(Main.getFileName(), chosenStore, chosenSection, chosenProduct, Main.getStores());
+        delete(chosenStore, chosenSection, chosenProduct, StoreService.getStores());
     }
 
     public static void display(Section section) {
@@ -216,7 +208,7 @@ public class ProductService {
 
         if (chosenStore.equals("")) return;
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, Main.getStores());
+        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
         if (!store.isPresent()) {
             System.out.println("Store not existent!");
             return;

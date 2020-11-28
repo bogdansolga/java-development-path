@@ -1,51 +1,68 @@
 package com.java.training.stores.project.services;
 
-import com.java.training.stores.project.Main;
 import com.java.training.stores.project.models.Section;
 import com.java.training.stores.project.models.Store;
 
 import java.util.*;
 
 public class SectionService {
-    public static void add(final String FILE_NAME, Section section, String storeName, List<Store> storeList) {
+
+    public static void add(Section section, String storeName, List<Store> storeList) {
         Optional<Store> store = StoreService.searchStore(storeName, storeList);
+        if (!store.isPresent()) {
+            return;
+        }
+
         store.get().getSections().add(section);
 
-        UtilService.writeInXML(FILE_NAME.concat(".csv"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        StoreService.saveStores(storeList);
         System.out.println("[Section] " + section.getName() + " was added successfully");
     }
 
-    public static void update(final String FILE_NAME, Section section, String storeName, String sectionName, List<Store> storeList) {
+    public static void update(Section section, String storeName, String sectionName, List<Store> storeList) {
+        // one way to unwrap the Optional - less disruptive
+
         Optional<Store> store = StoreService.searchStore(storeName, storeList);
+        if (!store.isPresent()) {
+            return;
+        }
 
         Optional<Section> searchedSection = searchSection(sectionName, store.get().getSections());
+        if (!searchedSection.isPresent()) {
+            return;
+        }
 
         searchedSection.get().setId(section.getId());
         searchedSection.get().setName(section.getName());
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        StoreService.saveStores(storeList);
 
         System.out.println("[Section] " + sectionName + " is now called " + section.getName());
     }
 
-    public static void delete(final String FILE_NAME, String sectionName, String storeName, List<Store> storeList) {
-        Optional<Store> store = StoreService.searchStore(storeName, storeList);
+    public static void delete(String sectionName, String storeName, List<Store> storeList) {
+        // another way to unwrap the Optional --> short circuiting operation, interrupts the execution flow
 
-        Optional<Section> searchedSection = searchSection(sectionName, store.get().getSections());
+        Store store = StoreService.searchStore(storeName, storeList)
+                                  .orElseThrow(() -> new IllegalArgumentException("There is no store"));
 
-        store.get().getSections().remove(searchedSection.get());
+        Section searchedSection = searchSection(sectionName, store.getSections())
+                                        .orElseThrow(() -> new IllegalArgumentException("There is no section"));
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        store.getSections()
+             .remove(searchedSection);
+
+        StoreService.saveStores(storeList);
 
         System.out.println("[Section] " + sectionName + " was deleted");
     }
 
 
     public static Optional<Section> searchSection(String sectionName, Set<Section> sectionList) {
-        return sectionList.stream().filter(section -> section.getName().compareTo(sectionName) == 0).findFirst();
+        return sectionList.stream()
+                          .filter(section -> section.getName()
+                                                    .compareTo(sectionName) == 0)
+                          .findFirst();
     }
 
     public static void createSection() {
@@ -55,7 +72,7 @@ public class SectionService {
 
         if (chosenStore.equals("")) return;
 
-        if (!(searchedStore = StoreService.searchStore(chosenStore, Main.getStores())).isPresent()) {
+        if (!(searchedStore = StoreService.searchStore(chosenStore, StoreService.getStores())).isPresent()) {
             System.out.println("Store is not existent!");
             return;
         }
@@ -70,7 +87,7 @@ public class SectionService {
             return;
         }
 
-        add(Main.getFileName(), new Section(0, sectionName), chosenStore, Main.getStores());
+        add(new Section(0, sectionName), chosenStore, StoreService.getStores());
     }
 
     public static String readSection(Store store) {
@@ -93,7 +110,7 @@ public class SectionService {
 
         if (chosenStore.equals("")) return;
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, Main.getStores());
+        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
         if (!store.isPresent()) {
             System.out.println("Store is not existent!");
             return;
@@ -111,7 +128,7 @@ public class SectionService {
         System.out.println("Choose a new name:");
         String newData = UtilService.getScanner().next();
 
-        update(Main.getFileName(), new Section(0, newData), chosenStore, chosenSection, Main.getStores());
+        update(new Section(0, newData), chosenStore, chosenSection, StoreService.getStores());
     }
 
     public static void deleteSection() {
@@ -119,7 +136,7 @@ public class SectionService {
 
         if (chosenStore.equals("")) return;
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, Main.getStores());
+        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
         if (!store.isPresent()) {
             System.out.println("Store is not existent!");
             return;
@@ -134,7 +151,7 @@ public class SectionService {
             return;
         }
 
-        delete(Main.getFileName(), chosenSection, chosenStore, Main.getStores());
+        delete(chosenSection, chosenStore, StoreService.getStores());
     }
 
     public static void display(Store store) {
@@ -150,12 +167,12 @@ public class SectionService {
 
         if (chosenStore.equals("")) return;
 
-        if (!StoreService.searchStore(chosenStore, Main.getStores()).isPresent()) {
+        if (!StoreService.searchStore(chosenStore, StoreService.getStores()).isPresent()) {
             System.out.println("Store is not existent!");
             return;
         }
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, Main.getStores());
+        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
         display(store.get());
     }
 }

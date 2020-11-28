@@ -1,6 +1,5 @@
 package com.java.training.stores.project.services;
 
-import com.java.training.stores.project.Main;
 import com.java.training.stores.project.exceptions.InvalidNumericInputException;
 
 public class MenuService {
@@ -26,6 +25,8 @@ public class MenuService {
             final String selected = UtilService.readValue();
             if (UtilService.isNumeric(selected)) {
                 final int selectedValue = Integer.parseInt(selected);
+
+                //FIXME use a switch instead of several if / else blocks
                 if (selectedValue == 1) {
                     //Option "Display" is selected
                     switch (option) {
@@ -93,11 +94,7 @@ public class MenuService {
             }
         } catch (InvalidNumericInputException e) {
             System.out.println(e.getMessage());
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
+            takeANap();
             secondaryMenuSelection(option);
         }
     }
@@ -115,45 +112,52 @@ public class MenuService {
 
     public static void mainMenuSelection() {
         try {
-            final String selected = UtilService.readValue();
-            if (UtilService.isNumeric(selected)) {
-                final int selectedValue = Integer.parseInt(selected);
-                if (selectedValue == 1) {
-                    //Option "Stores" is selected
+            switch (UtilService.readInteger()) {
+                case 1:
                     secondaryMenu("Stores");
-                    // loadStores(); createNewStore();
-                } else if (selectedValue == 2) {
-                    //Option "Sections" is selected
+                    break;
+
+                case 2:
                     secondaryMenu("Sections");
-                } else if (selectedValue == 3) {
-                    //Option "Products" is selected
+                    break;
+
+                case 3:
                     secondaryMenu("Products");
-                } else if (selectedValue == 4) {
-                    //Option "Display" is selected
-                    UtilService.displayStock(Main.getStores());
+                    break;
+
+                case 4:
+                    UtilService.displayStock(StoreService.getStores());
                     pause();
                     mainMenu();
-                } else if (selectedValue == 5) {
+                    break;
+
+                case 5:
                     UtilService.archiveCsvAsZip();
                     pause();
                     mainMenu();
-                } else if (selectedValue == 6) {
+                    break;
+
+                case 6:
                     UtilService.archiveXmlAsZip();
                     pause();
                     mainMenu();
-                } else if (selectedValue == 7) {
-                    //Option "Exit" is selected
+                    break;
+
+                case 7:
                     exit();
-                } else throw new InvalidNumericInputException();
             }
         } catch (InvalidNumericInputException e) {
             System.out.println(e.getMessage());
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
+            takeANap();
             mainMenuSelection();
+        }
+    }
+
+    private static void takeANap() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
         }
     }
 

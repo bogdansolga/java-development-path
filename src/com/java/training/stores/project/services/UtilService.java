@@ -1,5 +1,6 @@
 package com.java.training.stores.project.services;
 
+import com.java.training.stores.project.exceptions.InvalidNumericInputException;
 import com.java.training.stores.project.models.Product;
 import com.java.training.stores.project.models.Section;
 import com.java.training.stores.project.models.Store;
@@ -28,7 +29,25 @@ public class UtilService {
             return reader.readLine();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            //return null; //please don't return null; ever :)
+
+            throw new IllegalArgumentException("Invalid number");
+        }
+    }
+
+    public static Integer readInteger() {
+        // TODO use try with resources --> extract the stream objects
+
+        //Enter data using BufferReader
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        // Reading data using readLine
+        try {
+            return Integer.parseInt(reader.readLine());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            //return null; //please don't return null; ever :)
+
+            throw new InvalidNumericInputException();
         }
     }
 
@@ -44,15 +63,8 @@ public class UtilService {
         }
     }
 
-    public static void createNewStore() {
-        System.out.println("Enter the name of the new store: ");
-        final String name = readValue();
-        Store store = new Store(1, name, null);
-        System.out.println("The store " + store.getName() + " was successfully created.");
-    }
-
     public static void writeInXML(final String fileName, List<Store> storeList) {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(new File(fileName));
+        try (FileOutputStream fileOutputStream = new FileOutputStream(fileName);
              XMLEncoder xmlEncoder = new XMLEncoder(fileOutputStream)) {
 
             xmlEncoder.writeObject(storeList);

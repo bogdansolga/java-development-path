@@ -1,41 +1,56 @@
 package com.java.training.stores.project.services;
 
-import com.java.training.stores.project.Main;
 import com.java.training.stores.project.models.Store;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class StoreService {
-    public static void add(final String FILE_NAME, Store store, List<Store> storeList) {
+
+    private static final String FILE_NAME = "Store";
+
+    private static List<Store> stores;
+
+    // executed when the class is initialised for the 1st time, before the constructor
+    static {
+        stores = UtilService.getAllData(FILE_NAME + ".xml");
+        if (stores == null) stores = new ArrayList<>();
+    }
+
+    public static List<Store> getStores() {
+        return stores;
+    }
+
+    public static void setStores(List<Store> stores) {
+        StoreService.stores = stores;
+    }
+
+    public static void add(Store store, List<Store> storeList) {
         storeList.add(store);
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        saveStores(storeList);
+
         System.out.println("[Store] " + store.getName() + " was added successfully");
     }
 
-    public static void update(final String FILE_NAME, String storeName, Store store, List<Store> storeList) {
+    public static void update(String storeName, Store store, List<Store> storeList) {
         Optional<Store> searchedStore = searchStore(storeName, storeList);
 
         searchedStore.get().setId(store.getId());
         searchedStore.get().setName(store.getName());
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        saveStores(storeList);
 
         System.out.println("[Store] " + storeName + " is now called " + store.getName());
     }
 
-    public static void delete(final String FILE_NAME, String name, List<Store> storeList) {
+    public static void delete(String name, List<Store> storeList) {
         Optional<Store> searchedStore = searchStore(name, storeList);
 
         storeList.remove(searchedStore.get());
 
-        UtilService.writeInXML(FILE_NAME.concat(".xml"), storeList);
-        UtilService.writeInCSV(FILE_NAME.concat(".csv"), storeList);
+        saveStores(storeList);
 
         System.out.println("[Store] " + name + " was deleted");
     }
@@ -45,28 +60,28 @@ public class StoreService {
     }
 
     public static void createStore() {
-        if (Main.getStores() == null) Main.setStores(new ArrayList<>());
+        if (getStores() == null) setStores(new ArrayList<>());
 
         System.out.println("Choose an unique deposit name");
         String storeName = UtilService.getScanner().next();
 
-        if (searchStore(storeName, Main.getStores()).isPresent()) {
+        if (searchStore(storeName, getStores()).isPresent()) {
             System.out.println("Store already exist!");
             return;
         }
 
-        add(Main.getFileName(), new Store(0, storeName), Main.getStores());
+        add(new Store(0, storeName), getStores());
     }
 
     public static String readStore() {
-        if (Main.getStores() == null || Main.getStores().isEmpty()) {
+        if (getStores() == null || getStores().isEmpty()) {
             System.out.println("No stores");
-            Main.setStores(new ArrayList<>());
+            setStores(new ArrayList<>());
             return "";
         }
 
         System.out.println("Type the wanted storage:");
-        for (Store store : Main.getStores()) {
+        for (Store store : getStores()) {
             System.out.print(store.getName() + "\t");
         }
 
@@ -78,7 +93,7 @@ public class StoreService {
 
         if (chosenStore.equals("")) return;
 
-        if (!searchStore(chosenStore, Main.getStores()).isPresent()) {
+        if (!searchStore(chosenStore, getStores()).isPresent()) {
             System.out.println("Store is not existent!");
             return;
         }
@@ -86,7 +101,7 @@ public class StoreService {
         System.out.println("Choose a new name:");
         String newData = UtilService.getScanner().next();
 
-        update(Main.getFileName(), chosenStore, new Store(0, newData), Main.getStores());
+        update(chosenStore, new Store(0, newData), getStores());
     }
 
     public static void deleteStore() {
@@ -94,12 +109,12 @@ public class StoreService {
 
         if (chosenStore.equals("")) return;
 
-        if (!searchStore(chosenStore, Main.getStores()).isPresent()) {
+        if (!searchStore(chosenStore, getStores()).isPresent()) {
             System.out.println("Store is not existent!");
             return;
         }
 
-        delete(Main.getFileName(), chosenStore, Main.getStores());
+        delete(chosenStore, getStores());
     }
 
     public static void display(List<Store> storeList) {
@@ -112,6 +127,13 @@ public class StoreService {
     }
 
     public static void displayStores() {
-        display(Main.getStores());
+        display(getStores());
+    }
+
+    // encapsulation - only the StoreService 'knows' where and how the stores are saved
+    // the other services just invoke saveStores --> it is the contract between them
+    public static void saveStores(List<Store> stores) {
+        UtilService.writeInXML(FILE_NAME.concat(".xml"), stores);
+        UtilService.writeInCSV(FILE_NAME.concat(".csv"), stores);
     }
 }
