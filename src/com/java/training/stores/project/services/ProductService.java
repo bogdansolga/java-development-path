@@ -5,15 +5,24 @@ import com.java.training.stores.project.models.Section;
 import com.java.training.stores.project.models.Store;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public class ProductService {
-    public static void add(String storeName, String sectionName, Product product, List<Store> storeList) {
-        Optional<Store> store = StoreService.searchStore(storeName, storeList);
 
-        Optional<Section> section = SectionService.searchSection(sectionName, store.get().getSections());
+    private final StoreService storeService;
+
+    private final SectionService sectionService;
+
+    public ProductService(StoreService storeService, SectionService sectionService) {
+        this.storeService = storeService;
+        this.sectionService = sectionService;
+    }
+
+    public void add(String storeName, String sectionName, Product product) {
+        Optional<Store> store = storeService.searchStore(storeName);
+
+        Optional<Section> section = sectionService.searchSection(sectionName, store.get().getSections());
 
         if (searchProduct(product.getName(), section.get().getProducts()).isPresent()) {
             System.out.println("The product already exist!");
@@ -22,16 +31,16 @@ public class ProductService {
 
         section.get().getProducts().add(product);
 
-        StoreService.saveStores(storeList);
+        storeService.saveStores();
 
         System.out.println("[Product] " + product.getName() + " was added successfully");
     }
 
-    public static void update(String storeName, String sectionName, String productName,
-                              Product product, List<Store> storeList) {
-        Optional<Store> searchedStore = StoreService.searchStore(storeName, storeList);
+    public void update(String storeName, String sectionName, String productName,
+                              Product product) {
+        Optional<Store> searchedStore = storeService.searchStore(storeName);
 
-        Optional<Section> searchedSection = SectionService.searchSection(sectionName, searchedStore.get().getSections());
+        Optional<Section> searchedSection = sectionService.searchSection(sectionName, searchedStore.get().getSections());
 
         Optional<Product> searchedProduct = searchProduct(productName, searchedSection.get().getProducts());
 
@@ -40,19 +49,19 @@ public class ProductService {
         searchedProduct.get().setName(product.getName());
         searchedProduct.get().setPrice(product.getPrice());
 
-        StoreService.saveStores(storeList);
+        storeService.saveStores();
 
         System.out.println("[Product] " + productName + " is now called " + product.getName());
     }
 
-    public static void delete(String storeName, String sectionName, String productName, List<Store> storeList) {
-        Optional<Store> searchedStore = StoreService.searchStore(storeName, storeList);
+    public void delete(String storeName, String sectionName, String productName) {
+        Optional<Store> searchedStore = storeService.searchStore(storeName);
         if (!searchedStore.isPresent()) {
             System.out.println("Store is not existent!");
             return;
         }
 
-        Optional<Section> searchedSection = SectionService.searchSection(sectionName, searchedStore.get().getSections());
+        Optional<Section> searchedSection = sectionService.searchSection(sectionName, searchedStore.get().getSections());
         if (!searchedSection.isPresent()) {
             System.out.println("Section is not existent!");
             return;
@@ -66,30 +75,30 @@ public class ProductService {
 
         searchedSection.get().getProducts().remove(searchedProduct.get());
 
-        StoreService.saveStores(storeList);
+        storeService.saveStores();
 
         System.out.println("[Product] " + productName + " was deleted");
     }
 
-    public static Optional<Product> searchProduct(String productName, Set<Product> productSet) {
+    public Optional<Product> searchProduct(String productName, Set<Product> productSet) {
         return productSet.stream().filter(item -> item.getName().compareTo(productName) == 0).findFirst();
     }
 
-    public static void createProduct() {
+    public void createProduct() {
         Optional<Store> store;
         Optional<Section> section;
 
-        String chosenStore = StoreService.readStore();
+        String chosenStore = storeService.readStore();
 
         if (chosenStore.equals("")) return;
 
-        store = StoreService.searchStore(chosenStore, StoreService.getStores());
+        store = storeService.searchStore(chosenStore, StoreService.getStores());
         if (!store.isPresent()) {
             System.out.println("Store not existent");
             return;
         }
 
-        String chosenSection = SectionService.readSection(store.get());
+        String chosenSection = sectionService.readSection(store.get());
 
         if (chosenSection.equals("")) return;
 
@@ -112,7 +121,7 @@ public class ProductService {
         add(chosenStore, chosenSection, new Product(0, productName), StoreService.getStores());
     }
 
-    public static String readProduct(Section section) {
+    public String readProduct(Section section) {
         if (section.getProducts() == null || section.getProducts().isEmpty()) {
             System.out.println("No products");
             section.setProducts(new HashSet<>());
@@ -128,7 +137,7 @@ public class ProductService {
     }
 
 
-    public static void editProduct() {
+    public void editProduct() {
         String chosenStore = StoreService.readStore();
 
         if (chosenStore.equals("")) return;
@@ -163,7 +172,7 @@ public class ProductService {
         update(chosenStore, chosenSection, chosenProduct, new Product(0, newData), StoreService.getStores());
     }
 
-    public static void deleteProduct() {
+    public void deleteProduct() {
         String chosenStore = StoreService.readStore();
 
         if (chosenStore.equals("")) return;
@@ -195,7 +204,7 @@ public class ProductService {
         delete(chosenStore, chosenSection, chosenProduct, StoreService.getStores());
     }
 
-    public static void display(Section section) {
+    public void display(Section section) {
         if (section.getProducts() == null) {
             System.out.println("Couldn't find any products of this section");
             return;
@@ -203,7 +212,7 @@ public class ProductService {
         section.getProducts().forEach(product -> System.out.println(product.getName()));
     }
 
-    public static void displayProducts() {
+    public void displayProducts() {
         String chosenStore = StoreService.readStore();
 
         if (chosenStore.equals("")) return;

@@ -7,22 +7,28 @@ import java.util.*;
 
 public class SectionService {
 
-    public static void add(Section section, String storeName, List<Store> storeList) {
-        Optional<Store> store = StoreService.searchStore(storeName, storeList);
+    private final StoreService storeService;
+
+    public SectionService(StoreService storeService) {
+        this.storeService = storeService;
+    }
+
+    public void add(Section section, String storeName) {
+        Optional<Store> store = storeService.searchStore(storeName);
         if (!store.isPresent()) {
             return;
         }
 
         store.get().getSections().add(section);
 
-        StoreService.saveStores(storeList);
+        storeService.saveStores();
         System.out.println("[Section] " + section.getName() + " was added successfully");
     }
 
-    public static void update(Section section, String storeName, String sectionName, List<Store> storeList) {
+    public void update(Section section, String storeName, String sectionName) {
         // one way to unwrap the Optional - less disruptive
 
-        Optional<Store> store = StoreService.searchStore(storeName, storeList);
+        Optional<Store> store = storeService.searchStore(storeName);
         if (!store.isPresent()) {
             return;
         }
@@ -35,15 +41,15 @@ public class SectionService {
         searchedSection.get().setId(section.getId());
         searchedSection.get().setName(section.getName());
 
-        StoreService.saveStores(storeList);
+        storeService.saveStores();
 
         System.out.println("[Section] " + sectionName + " is now called " + section.getName());
     }
 
-    public static void delete(String sectionName, String storeName, List<Store> storeList) {
+    public void delete(String sectionName, String storeName) {
         // another way to unwrap the Optional --> short circuiting operation, interrupts the execution flow
 
-        Store store = StoreService.searchStore(storeName, storeList)
+        Store store = storeService.searchStore(storeName)
                                   .orElseThrow(() -> new IllegalArgumentException("There is no store"));
 
         Section searchedSection = searchSection(sectionName, store.getSections())
@@ -52,27 +58,27 @@ public class SectionService {
         store.getSections()
              .remove(searchedSection);
 
-        StoreService.saveStores(storeList);
+        storeService.saveStores();
 
         System.out.println("[Section] " + sectionName + " was deleted");
     }
 
 
-    public static Optional<Section> searchSection(String sectionName, Set<Section> sectionList) {
+    public Optional<Section> searchSection(String sectionName, Set<Section> sectionList) {
         return sectionList.stream()
                           .filter(section -> section.getName()
                                                     .compareTo(sectionName) == 0)
                           .findFirst();
     }
 
-    public static void createSection() {
+    public void createSection() {
         Optional<Store> searchedStore;
 
-        String chosenStore = StoreService.readStore();
+        String chosenStore = storeService.readStore();
 
         if (chosenStore.equals("")) return;
 
-        if (!(searchedStore = StoreService.searchStore(chosenStore, StoreService.getStores())).isPresent()) {
+        if (!(searchedStore = storeService.searchStore(chosenStore)).isPresent()) {
             System.out.println("Store is not existent!");
             return;
         }
@@ -87,10 +93,10 @@ public class SectionService {
             return;
         }
 
-        add(new Section(0, sectionName), chosenStore, StoreService.getStores());
+        add(new Section(0, sectionName), chosenStore);
     }
 
-    public static String readSection(Store store) {
+    public String readSection(Store store) {
         if (store.getSections() == null || store.getSections().isEmpty()) {
             System.out.println("No sections");
             store.setSections(new HashSet<>());
@@ -105,12 +111,12 @@ public class SectionService {
         return UtilService.getScanner().next();
     }
 
-    public static void editSection() {
-        String chosenStore = StoreService.readStore();
+    public void editSection() {
+        String chosenStore = storeService.readStore();
 
         if (chosenStore.equals("")) return;
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
+        Optional<Store> store = storeService.searchStore(chosenStore);
         if (!store.isPresent()) {
             System.out.println("Store is not existent!");
             return;
@@ -128,15 +134,15 @@ public class SectionService {
         System.out.println("Choose a new name:");
         String newData = UtilService.getScanner().next();
 
-        update(new Section(0, newData), chosenStore, chosenSection, StoreService.getStores());
+        update(new Section(0, newData), chosenStore, chosenSection);
     }
 
-    public static void deleteSection() {
-        String chosenStore = StoreService.readStore();
+    public void deleteSection() {
+        String chosenStore = storeService.readStore();
 
         if (chosenStore.equals("")) return;
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
+        Optional<Store> store = storeService.searchStore(chosenStore);
         if (!store.isPresent()) {
             System.out.println("Store is not existent!");
             return;
@@ -151,10 +157,10 @@ public class SectionService {
             return;
         }
 
-        delete(chosenSection, chosenStore, StoreService.getStores());
+        delete(chosenSection, chosenStore);
     }
 
-    public static void display(Store store) {
+    public void display(Store store) {
         if (store.getSections() == null) {
             System.out.println("Couldn't find any sections of this storage");
             return;
@@ -162,17 +168,17 @@ public class SectionService {
         store.getSections().forEach(section -> System.out.println(section.getName()));
     }
 
-    public static void displaySections() {
-        String chosenStore = StoreService.readStore();
+    public void displaySections() {
+        String chosenStore = storeService.readStore();
 
         if (chosenStore.equals("")) return;
 
-        if (!StoreService.searchStore(chosenStore, StoreService.getStores()).isPresent()) {
+        if (!storeService.searchStore(chosenStore).isPresent()) {
             System.out.println("Store is not existent!");
             return;
         }
 
-        Optional<Store> store = StoreService.searchStore(chosenStore, StoreService.getStores());
+        Optional<Store> store = storeService.searchStore(chosenStore);
         display(store.get());
     }
 }
